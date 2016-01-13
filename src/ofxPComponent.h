@@ -75,21 +75,24 @@ public:
 	ofRectangle _minBox, _outerBox;										// the minimum bounding box and the actual bounding box
 	ofxParvenu* _parvenuPtr;											// the pointer to ofxParvenu, mainly used in drawing texts. ofxParvenu is not dynamically allocated.
 	std::shared_ptr<ofxPComponent> _parent = { nullptr };				// the pointer to this component's parent, dynamically allocated
+	std::vector<std::shared_ptr<ofxPComponent>> _nonContainerChildren;	// components that make up a bigger component which is not necessarily a container, e.g. the button in ofxPHSlider
 	ofColor _idColor = { rand() % 255, rand() % 255, rand() % 255 };	// randomly generated color that is used in this ofxPComponent exclusively in drawDebug()
 	std::string _tag = { "" };											// a tag is not part of _outerBox; it's just a little "tag" that floats on the top-left corner of the window. in fact i was just too lazy to draw it out.
 	bool _drawTag = { false };
 	
 	bool _isDraggable = { false };			// by default this is false. some ofxPComponent-derived classes have this yes, like ofxPWindow. ONLY SET NON-CHILD COMPONENTS TO BE DRAGGABLE. OR WEIRD THINGS HAPPEN.
-	bool _noDragIfChildPressed = { true };	// prevents a draggable component from being dragged when a child of it is pressed. true by default.
 	ofVec2f _dragOffset;
 
-	bool isMousePressed = { false }, isMouseOver = { false }, isDragged = { false };
+	bool isMousePressed = { false }, isMouseOver = { false }, isDragged = { false };/*
 	void(*mousePressedFunc)(ofMouseEventArgs&) = { nullptr };
 	void(*mouseReleasedFunc)(ofMouseEventArgs&) = { nullptr };
 	void(*mouseMovedFunc)(ofMouseEventArgs&) = { nullptr };
 	void(*mouseOverFunc)(ofMouseEventArgs&) = { nullptr };
 	void(*mouseOutFunc)(ofMouseEventArgs&) = { nullptr };
-	void(*mouseDraggedFunc)(ofMouseEventArgs&) = { nullptr };
+	void(*mouseDraggedFunc)(ofMouseEventArgs&) = { nullptr };*/
+
+	std::function<void(ofMouseEventArgs&)> mousePressedFunc, mouseReleasedFunc, mouseMovedFunc, mouseOverFunc, mouseOutFunc, mouseDraggedFunc;
+	bool _deleteMe = { false };				// set this to true if you wish the component to be deleted from ofxParvenu::_comps.
 };
 
 #endif

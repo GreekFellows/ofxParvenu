@@ -47,6 +47,19 @@ void ofxPContainer::pushComponent(std::shared_ptr<ofxPComponent> comp) {
 	pushComponent(comp, ContentAlignment::HC, ContentAlignment::VM, false);
 }
 
+// deleter() must be called in draw()
+void ofxPContainer::deleter() {
+	for (int i = 0; i < _children.size(); ++i) {
+		if (_children[i]->_deleteMe) {
+			_drawSeparators.erase(_drawSeparators.begin() + i);
+		}
+	}
+
+	_children.erase(std::remove_if(_children.begin(), _children.end(), [](std::shared_ptr<ofxPComponent> child){
+		return child->_deleteMe;
+	}), _children.end());
+}
+
 void ofxPContainer::mousePressed(ofMouseEventArgs& args) {
 	_childIsMousePressed = false;
 	for (auto ptr = _children.rbegin(), end = _children.rend(); ptr != end; ++ptr) {
@@ -79,6 +92,13 @@ void ofxPContainer::mouseMoved(ofMouseEventArgs& args) {
 }
 
 void ofxPContainer::mouseDragged(ofMouseEventArgs &args) {
+	for (auto ptr = _children.rbegin(), end = _children.rend(); ptr != end; ++ptr) {
+		if ((*ptr)->isMousePressed) {
+			(*ptr)->mouseDragged(args);
+			break;
+		}
+	}
+
 	if (_childIsMousePressed && _noDragIfChildPressed) {
 		return;
 	}

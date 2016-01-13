@@ -8,6 +8,9 @@ void swap(ofxPVContainerWindow& lhs, ofxPVContainerWindow& rhs) {
 void ofxPVContainerWindow::draw(bool debug) {
 	ofPushStyle();
 
+	ofSetColor(128, 64 * _fill.a / 255);
+	ofFill();
+	ofRect(ofRectangle(_outerBox.x, _outerBox.y + 5, _outerBox.width, _outerBox.height));
 	ofSetColor(_fill);
 	ofRect(_outerBox);
 	ofSetColor(_stroke);
@@ -27,7 +30,6 @@ void ofxPVContainerWindow::draw(bool debug) {
 }
 
 void ofxPVContainerWindow::calculateMinBox() {
-	_wndTitleTextArea->calculateMinBox();
 	double maxwidth = _wndTitleTextArea->_outerBox.width, totheight = _verticalPadding * 2 + _wndTitleTextArea->_outerBox.height;
 	for (auto ptr : _children) {
 		ptr->calculateMinBox();

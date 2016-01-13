@@ -52,6 +52,12 @@ public:
 		return *this;
 	}
 
+	virtual ofxPButton& setLabel(const std::string& clabel) {
+		_label = clabel;
+		_labelBoundingBox = _parvenuPtr->getUsingFont(_fontStyle).getStringBoundingBox(_label, 0, 0);
+		return *this;
+	}
+
 	// overloaded operators
 	virtual bool operator==(ofxPButton& rhs) const {
 		return ofxPComponent::operator==(rhs) && (true);
@@ -68,7 +74,7 @@ public:
 
 	ofColor _fill = { 255, 51, 102 }, _stroke = { 0, 0 }, _labelColor = { 0 };
 
-	double _labelPadding = { 15 };
+	double _labelHorizontalPadding = { 15 }, _labelVerticalPadding = { 15 };
 };
 
 #endif

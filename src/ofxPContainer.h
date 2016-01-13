@@ -67,6 +67,8 @@ public:
 		return *this;
 	}
 
+	void deleter();
+
 	// overloaded operators
 	virtual bool operator==(ofxPContainer& rhs) const {
 		return ofxPComponent::operator==(rhs) && (true);
@@ -79,7 +81,8 @@ public:
 	// members
 	std::vector<std::shared_ptr<ofxPComponent>> _children;
 	std::vector<std::pair<ContentAlignment, ContentAlignment>> _alignments;
-	bool _childIsMousePressed = { false }; // used to check if the component can be dragged. see ofxPComponent::_noDragIfChildPressed.
+	bool _childIsMousePressed = { false }; // used to check if the component can be dragged. see _noDragIfChildPressed.
+	bool _noDragIfChildPressed = { true };	// prevents a draggable component from being dragged when a child of it is pressed. true by default.
 
 	std::vector<bool> _drawSeparators; // contains as many bools as many components in _children. each bool specifies whether a separator is drawn after the corresponding element. since separators are drawn BETWEEN components, the last bool in this vector is ignored.
 	ofColor _separatorStroke = { 0, 64 };

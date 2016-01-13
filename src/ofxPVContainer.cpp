@@ -12,14 +12,6 @@ void ofxPVContainer::draw(bool debug) {
 	ofPushStyle();
 	ofPushMatrix();
 
-	if (debug) {
-		drawDebug();
-	}
-
-	if (_drawTag) {
-		drawTag();
-	}
-
 	ofTranslate(_outerBox.x, _outerBox.y);
 
 	int sepCount = 0, maxCount = _drawSeparators.size() - 1;
@@ -39,7 +31,18 @@ void ofxPVContainer::draw(bool debug) {
 	}
 
 	ofPopMatrix();
+
+	if (debug) {
+		drawDebug();
+	}
+
+	if (_drawTag) {
+		drawTag();
+	}
+
 	ofPopStyle();
+
+	ofxPContainer::deleter();
 }
 
 void ofxPVContainer::calculateMinBox() {

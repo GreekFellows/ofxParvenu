@@ -12,6 +12,14 @@ void ofxPTextArea::draw(bool debug) {
 	ofPushStyle();
 	ofPushMatrix();
 
+	ofTranslate(_outerBox.x, _outerBox.y);
+
+	ofSetColor(0);
+	ofFill();
+	_parvenuPtr->getUsingFont(_fontStyle).drawString(_text, _textPadding, _parvenuPtr->getUsingFont().getLineHeight() + _textPadding);
+
+	ofPopMatrix();
+
 	if (debug) {
 		drawDebug();
 	}
@@ -20,13 +28,6 @@ void ofxPTextArea::draw(bool debug) {
 		drawTag();
 	}
 
-	ofTranslate(_outerBox.x, _outerBox.y);
-
-	ofSetColor(0);
-	ofFill();
-	_parvenuPtr->getUsingFont(_fontStyle).drawString(_text, _textPadding, _parvenuPtr->getUsingFont().getLineHeight() + _textPadding);
-
-	ofPopMatrix();
 	ofPopStyle();
 }
 

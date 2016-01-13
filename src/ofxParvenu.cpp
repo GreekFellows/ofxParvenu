@@ -12,13 +12,45 @@ void ofxParvenu::draw(bool debug) {
 			ptr->draw(debug);
 		}
 	}
+	
+	deleter();
+}
+
+// deletes all that wishes to be deleted.
+// _deleteMe of children of a to-be-deleted is also set to true; they are left for their own parents to delete them.
+void ofxParvenu::deleter() {
+	_comps.erase(std::remove_if(_comps.begin(), _comps.end(), [](std::shared_ptr<ofxPComponent> comp){
+		std::shared_ptr<ofxPComponent> ccomp = comp;
+		while (ccomp) {
+			if (ccomp->_deleteMe) {
+				comp->_deleteMe = true;
+				return true;
+			}
+			else {
+				ccomp = ccomp->_parent;
+			}
+		}
+
+		return false;
+	}), _comps.end());
 }
 
 void ofxParvenu::drawText(const std::string &str, const double &x, const double &y) {
 	getUsingFont().drawString(str, x, y);
 }
 
-void ofxParvenu::pushComponent(std::shared_ptr<ofxPComponent> comp) {
+void ofxParvenu::drawFPS() {
+	ofPushStyle();
+	ofSetColor(0);
+	ofDrawBitmapString(std::to_string(ofGetFrameRate()), 10, 16);
+	ofSetColor(128);
+	ofRect(10, 20, 130, 30);
+	ofSetColor(0);
+	ofRect(10, 20, 10 + ofGetFrameRate() * 2, 30);
+	ofPopStyle();
+}
+
+void ofxParvenu::pushComponent(const std::shared_ptr<ofxPComponent>& comp) {
 	_comps.push_back(comp);
 }
 
@@ -46,7 +78,12 @@ void ofxParvenu::onMouseMoved(ofMouseEventArgs& args) {
 
 void ofxParvenu::onMouseDragged(ofMouseEventArgs& args) {
 	for (auto ptr : _comps) {
-		ptr->mouseDragged(args);
+		for (auto ptr = _comps.rbegin(), end = _comps.rend(); ptr != end; ++ptr) {
+			if ((*ptr)->isMousePressed) {
+				(*ptr)->mouseDragged(args);
+				break;
+			}
+		}
 	}
 }
 

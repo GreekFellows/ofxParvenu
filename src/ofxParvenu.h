@@ -32,8 +32,10 @@ public:
 	void setup();
 	void draw(bool = false);
 	void drawText(const std::string&, const double&, const double&);
+	void deleter();
+	static void drawFPS(); // utility function!
 
-	void pushComponent(std::shared_ptr<ofxPComponent>);
+	void pushComponent(const std::shared_ptr<ofxPComponent>&);
 
 	// event listeners and stuff
 	void onMousePressed(ofMouseEventArgs&);
